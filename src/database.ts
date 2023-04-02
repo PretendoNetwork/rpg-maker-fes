@@ -123,3 +123,17 @@ export async function getRPGListByDownloads(filter: RPGSearchFilterParams, order
 		};
 	}
 }
+
+export async function getRPGListByRating(filter: RPGSearchFilterParams, order: mongoose.SortOrder, offset: number, limit: number): Promise<RPGList> {
+	verifyConnected();
+
+	try {
+		const queryResults: HydratedRPGDocument[] = await RPG.find(filter).sort({ rating: order }).skip(offset).limit(limit).exec();
+		return makeRPGListFromQueryResults(queryResults);
+	} catch (err) {
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
+	}
+}

@@ -15,7 +15,7 @@ export interface PostRequestArgs extends Genres {
 	contest?: number;
 	sortupdt?: mongoose.SortOrder; // * Only if filtering by upload date
 	sortdlcount?: mongoose.SortOrder; // * Only if filtering via download count
-	sortreviewave?: string; // * Only if filtering via review count
+	sortreviewave?: mongoose.SortOrder; // * Only if filtering via review count
 	offset?: number;
 	recnum?: number;
 	award?: number;

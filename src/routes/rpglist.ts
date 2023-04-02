@@ -1,6 +1,6 @@
 import express from 'express';
 import { jsonEncodeUTF16LE } from '@/util';
-import { getRPGListByUpdateDate, getRPGListByDownloads } from '@/database';
+import { getRPGListByUpdateDate, getRPGListByDownloads, getRPGListByRating } from '@/database';
 import { RPGList } from '@/types/common/rpg-list';
 import { RPGSearchFilterParams } from '@/types/common/rpg-search-filter-params';
 import { GenreID } from '@/types/common/genres';
@@ -50,6 +50,10 @@ router.post('/rpglist', async (request: express.Request, response: express.Respo
 		}
 
 		rpgList = await getRPGListByUpdateDate(filter, request.args.sortupdt, request.args.offset, request.args.recnum);
+	}
+
+	if (request.args.sortreviewave !== undefined) {
+		rpgList = await getRPGListByRating(filter, request.args.sortreviewave, request.args.offset, request.args.recnum);
 	}
 
 	response.send(jsonEncodeUTF16LE(rpgList));
