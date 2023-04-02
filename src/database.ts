@@ -6,6 +6,7 @@ import { RPG } from '@/models/rpg';
 import { HydratedMakerDocument } from '@/types/mongoose/maker';
 import { HydratedRPGDocument } from '@/types/mongoose/rpg';
 import { RPGList } from '@/types/common/rpg-list';
+import { RPGSearchFilterParams } from '@/types/common/rpg-search-filter-params';
 
 const connection_string: string = config.mongoose.connection_string;
 const options: mongoose.ConnectOptions = config.mongoose.options;
@@ -37,6 +38,35 @@ export async function getMakerByPID(pid: number): Promise<HydratedMakerDocument 
 	});
 }
 
+export async function getRPGListByPassword(password: string): Promise<RPGList> {
+	verifyConnected();
+
+	try {
+		const queryResults: HydratedRPGDocument[] = await RPG.find({ password: password }).exec();
+		return makeRPGListFromQueryResults(queryResults);
+	} catch (err) {
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
+	}
+}
+
+export async function getRPGListByTitle(title: string, offset: number, limit: number): Promise<RPGList> {
+	verifyConnected();
+
+	try {
+		title = escapeRegExp(title);
+		const queryResults: HydratedRPGDocument[] = await RPG.find({ title: { $regex: `^${title}*`, $options: 'i' } }).skip(offset).limit(limit).exec();
+		return makeRPGListFromQueryResults(queryResults);
+	} catch (err) {
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
+	}
+}
+
 export async function getRPGListByMakerID(makerID: number, offset: number, limit: number): Promise<RPGList> {
 	verifyConnected();
 
@@ -66,11 +96,11 @@ export async function getRPGListByUsername(username: string, offset: number, lim
 	}
 }
 
-export async function getRPGListByPassword(password: string): Promise<RPGList> {
+export async function getRPGListByUpdateDate(filter: RPGSearchFilterParams, order: mongoose.SortOrder, offset: number, limit: number): Promise<RPGList> {
 	verifyConnected();
 
 	try {
-		const queryResults: HydratedRPGDocument[] = await RPG.find({ password: password }).exec();
+		const queryResults: HydratedRPGDocument[] = await RPG.find(filter).sort({ updated: order }).skip(offset).limit(limit).exec();
 		return makeRPGListFromQueryResults(queryResults);
 	} catch (err) {
 		// TODO - Better error
@@ -80,26 +110,11 @@ export async function getRPGListByPassword(password: string): Promise<RPGList> {
 	}
 }
 
-export async function getRPGListByDownloads(order: mongoose.SortOrder, offset: number, limit: number): Promise<RPGList> {
+export async function getRPGListByDownloads(filter: RPGSearchFilterParams, order: mongoose.SortOrder, offset: number, limit: number): Promise<RPGList> {
 	verifyConnected();
 
 	try {
-		const queryResults: HydratedRPGDocument[] = await RPG.find().sort({ downloads: order }).skip(offset).limit(limit).exec();
-		return makeRPGListFromQueryResults(queryResults);
-	} catch (err) {
-		// TODO - Better error
-		return {
-			endcode: 100
-		};
-	}
-}
-
-export async function getRPGListByTitle(title: string, offset: number, limit: number): Promise<RPGList> {
-	verifyConnected();
-
-	try {
-		title = escapeRegExp(title);
-		const queryResults: HydratedRPGDocument[] = await RPG.find({ title: { $regex: `^${title}*`, $options: 'i' } }).skip(offset).limit(limit).exec();
+		const queryResults: HydratedRPGDocument[] = await RPG.find(filter).sort({ downloads: order }).skip(offset).limit(limit).exec();
 		return makeRPGListFromQueryResults(queryResults);
 	} catch (err) {
 		// TODO - Better error

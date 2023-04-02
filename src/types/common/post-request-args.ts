@@ -13,7 +13,7 @@ export interface PostRequestArgs extends Genres {
 	// * Only present when getting RPG list
 	startupdt?: number;
 	contest?: number;
-	sortupdt?: string; // * Only if filtering by upload date
+	sortupdt?: mongoose.SortOrder; // * Only if filtering by upload date
 	sortdlcount?: mongoose.SortOrder; // * Only if filtering via download count
 	sortreviewave?: string; // * Only if filtering via review count
 	offset?: number;
