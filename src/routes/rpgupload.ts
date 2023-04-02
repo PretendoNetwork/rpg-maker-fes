@@ -40,7 +40,7 @@ router.post('/rpgupload', async (request: express.Request, response: express.Res
 	}
 
 	const rpg: HydratedRPGDocument = await RPG.create({
-		updated: moment().format('YYYY-MM-DD HH-mm-ss'),
+		updated: moment().format('YYYY-MM-DD HH:mm:ss'),
 		maker_id: request.maker.id,
 		maker_username: request.maker.username,
 		title: Buffer.from(request.args.title, 'base64').toString(),
