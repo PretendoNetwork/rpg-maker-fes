@@ -6,6 +6,9 @@ import fs from 'fs-extra';
 import express from 'express';
 import { config, disabledFeatures } from '@/config-manager';
 import { Token } from '@/types/common/token';
+import { HydratedRPGDocument } from './types/mongoose/rpg';
+import { RPG } from '@/types/common/rpg';
+import { RPGList } from './types/common/rpg-list';
 
 let s3: S3;
 
@@ -118,4 +121,42 @@ export function jsonEncodeUTF16LE(input: object): string {
 	}
 
 	return Buffer.from(array).toString();
+}
+
+export function makeRPGListFromQueryResults(rpgs: HydratedRPGDocument[]): RPGList {
+	const rpgList: RPGList = {
+		endcode: 0
+	};
+
+	for (let i = 0; i < rpgs.length; i++) {
+		const rpg = rpgs[i];
+		const rpgData: RPG = {
+			sid: rpg.id,
+			suid: rpg.maker_id,
+			title: Buffer.from(rpg.title).toString('base64'),
+			uname: Buffer.from(rpg.maker_username).toString('base64'),
+			password: rpg.password,
+			updt: rpg.updated,
+			datablocksize: rpg.block_size,
+			version:  rpg.version,
+			packageversion: rpg.package_version,
+			reviewave: rpg.rating,
+			lang: rpg.language,
+			edit: rpg.editable ? 1 : 0,
+			attribute: rpg.attribute,
+			award: rpg.award,
+			famer: rpg.famer,
+			comment: Buffer.from(rpg.comment).toString('base64'),
+			contest: rpg.contest ? 1 : 0,
+			owner: rpg.owner
+		};
+
+		for (const genre of rpg.genres) {
+			rpgData[`genre${genre}`] = 1;
+		}
+
+		rpgList[`${i}`] = rpgData;
+	}
+
+	return rpgList;
 }

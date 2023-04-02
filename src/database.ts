@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
+import { makeRPGListFromQueryResults } from '@/util';
 import { config } from '@/config-manager';
 import { Maker } from '@/models/maker';
 import { RPG } from '@/models/rpg';
 import { HydratedMakerDocument } from '@/types/mongoose/maker';
 import { HydratedRPGDocument } from '@/types/mongoose/rpg';
+import { RPGList } from '@/types/common/rpg-list';
 
 const connection_string: string = config.mongoose.connection_string;
 const options: mongoose.ConnectOptions = config.mongoose.options;
@@ -35,12 +37,30 @@ export async function getMakerByPID(pid: number): Promise<HydratedMakerDocument 
 	});
 }
 
-export async function getRPGListByDownloads(order: mongoose.SortOrder, offset: number, limit: number): Promise<HydratedRPGDocument[]> {
+export async function getRPGListByUsername(username: string, offset: number, limit: number): Promise<RPGList> {
 	verifyConnected();
 
 	try {
-		return await RPG.find().sort({downloads: order}).skip(offset).limit(limit).exec();
+		const queryResults: HydratedRPGDocument[] = await RPG.find({ maker_username: username }).skip(offset).limit(limit).exec();
+		return makeRPGListFromQueryResults(queryResults);
 	} catch (err) {
-		return [];
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
+	}
+}
+
+export async function getRPGListByDownloads(order: mongoose.SortOrder, offset: number, limit: number): Promise<RPGList> {
+	verifyConnected();
+
+	try {
+		const queryResults: HydratedRPGDocument[] = await RPG.find().sort({ downloads: order }).skip(offset).limit(limit).exec();
+		return makeRPGListFromQueryResults(queryResults);
+	} catch (err) {
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
 	}
 }

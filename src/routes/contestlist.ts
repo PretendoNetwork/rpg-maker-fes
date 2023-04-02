@@ -9,6 +9,7 @@ const router: express.Router = express.Router();
  * Description: Gets a list of active contests
  */
 router.post('/contestlist', async (request: express.Request, response: express.Response) => {
+	// TODO - Look into hosting contests
 	response.send(jsonEncodeUTF16LE({
 		endcode: 0
 	}));
