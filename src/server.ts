@@ -15,6 +15,7 @@ import signin from '@/routes/signin';
 import username from '@/routes/username';
 import contestlist from '@/routes/contestlist';
 import rpglist from '@/routes/rpglist';
+import rpglistpassword from '@/routes/rpglistpassword';
 import myrpglist from '@/routes/myrpglist';
 import rpgupload from '@/routes/rpgupload';
 
@@ -57,6 +58,7 @@ api.use('/api', signin);
 api.use('/api', username);
 api.use('/api', contestlist);
 api.use('/api', rpglist);
+api.use('/api', rpglistpassword);
 api.use('/api', myrpglist);
 api.use('/api', rpgupload);
 

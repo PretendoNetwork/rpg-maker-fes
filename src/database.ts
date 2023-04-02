@@ -51,6 +51,20 @@ export async function getRPGListByUsername(username: string, offset: number, lim
 	}
 }
 
+export async function getRPGListByPassword(password: string): Promise<RPGList> {
+	verifyConnected();
+
+	try {
+		const queryResults: HydratedRPGDocument[] = await RPG.find({ password: password }).exec();
+		return makeRPGListFromQueryResults(queryResults);
+	} catch (err) {
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
+	}
+}
+
 export async function getRPGListByDownloads(order: mongoose.SortOrder, offset: number, limit: number): Promise<RPGList> {
 	verifyConnected();
 
