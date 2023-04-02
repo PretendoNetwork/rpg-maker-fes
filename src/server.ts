@@ -50,11 +50,6 @@ const api = express.Router();
 
 // * Setup API routes
 LOG_INFO('[RPG Maker] Applying imported routes');
-api.use((_request: express.Request, response: express.Response, next: express.NextFunction): void => {
-	response.set('Content-Type', 'text/html; charset=UTF-8');
-
-	return next();
-});
 api.use('/api', flags);
 api.use('/api', signin);
 api.use('/api', username);
