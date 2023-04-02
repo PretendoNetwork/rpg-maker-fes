@@ -55,7 +55,8 @@ export async function getRPGListByUsername(username: string, offset: number, lim
 	verifyConnected();
 
 	try {
-		const queryResults: HydratedRPGDocument[] = await RPG.find({ maker_username: username }).skip(offset).limit(limit).exec();
+		username = escapeRegExp(username);
+		const queryResults: HydratedRPGDocument[] = await RPG.find({ maker_username: { $regex: `^${username}*`, $options: 'i' } }).skip(offset).limit(limit).exec();
 		return makeRPGListFromQueryResults(queryResults);
 	} catch (err) {
 		// TODO - Better error
