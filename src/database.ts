@@ -37,6 +37,20 @@ export async function getMakerByPID(pid: number): Promise<HydratedMakerDocument 
 	});
 }
 
+export async function getRPGListByMakerID(makerID: number, offset: number, limit: number): Promise<RPGList> {
+	verifyConnected();
+
+	try {
+		const queryResults: HydratedRPGDocument[] = await RPG.find({ maker_id: makerID }).skip(offset).limit(limit).exec();
+		return makeRPGListFromQueryResults(queryResults);
+	} catch (err) {
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
+	}
+}
+
 export async function getRPGListByUsername(username: string, offset: number, limit: number): Promise<RPGList> {
 	verifyConnected();
 
