@@ -21,12 +21,30 @@ router.post('/rpgupload', async (request: express.Request, response: express.Res
 		}));
 	}
 
+	// TODO - Use zod or joi or something
+	if (
+		request.maker === null ||
+		request.args.title === undefined ||
+		request.args.comment === undefined ||
+		request.args.version === undefined ||
+		request.args.packageversion === undefined ||
+		request.args.edit === undefined ||
+		request.args.attribute === undefined ||
+		request.args.owner === undefined ||
+		request.args.datablocksize === undefined
+	) {
+		// TODO - Find better error, this is a guess
+		return response.send(jsonEncodeUTF16LE({
+			EndCode: 100
+		}));
+	}
+
 	const rpg: HydratedRPGDocument = await RPG.create({
 		updated: moment().format('YYYY-MM-DD HH-mm-ss'),
-		maker_id: request.maker?.id,
-		maker_username: request.maker?.username,
-		title: Buffer.from(request.args.title || '', 'base64').toString(),
-		comment: Buffer.from(request.args.comment || '', 'base64').toString(),
+		maker_id: request.maker.id,
+		maker_username: request.maker.username,
+		title: Buffer.from(request.args.title, 'base64').toString(),
+		comment: Buffer.from(request.args.comment, 'base64').toString(),
 		rating: 0,
 		genres: [],
 		version: Number(request.args.version),
