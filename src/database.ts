@@ -53,6 +53,12 @@ export async function getMakerByPID(pid: number): Promise<HydratedMakerDocument 
 	});
 }
 
+export async function getRPGByID(id: number): Promise<HydratedRPGDocument | null> {
+	verifyConnected();
+
+	return await RPG.findOne<HydratedRPGDocument>({ id: id });
+}
+
 export async function getRPGListByPassword(password: string): Promise<RPGList> {
 	return await getRPGList({ password: password }, {}, 0, 0);
 }

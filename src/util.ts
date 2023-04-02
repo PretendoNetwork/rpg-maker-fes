@@ -1,7 +1,8 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
+import { Readable } from 'node:stream';
 import { IncomingHttpHeaders } from 'node:http';
-import { PutObjectCommand, S3 } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, S3 } from '@aws-sdk/client-s3';
 import fs from 'fs-extra';
 import express from 'express';
 import { config, disabledFeatures } from '@/config-manager';
@@ -22,26 +23,6 @@ if (!disabledFeatures.s3) {
 			secretAccessKey: config.s3.secret
 		}
 	});
-}
-
-export function escapeRegExp(string: string): string {
-	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-export function nintendoBase64Decode(encoded: string): Buffer {
-	encoded = encoded.replaceAll('.', '+').replaceAll('-', '/').replaceAll('*', '=');
-	return Buffer.from(encoded, 'base64');
-}
-
-export function generateRPGPassword(): string {
-	const chars = '0123456789abcdefghiklmnopqrstuvwxyz';
-	let password = '';
-
-	for (let i = 0; i < 8; i++) {
-		password += chars[Math.floor(Math.random() * chars.length)];
-	}
-
-	return password;
 }
 
 export function decryptAndUnpackToken(token: string): Token {
@@ -72,12 +53,35 @@ export function unpackToken(token: Buffer): Token {
 	};
 }
 
-export function fullUrl(request: express.Request): string {
-	const protocol: string = request.protocol;
-	const host: string = request.host;
-	const opath: string = request.originalUrl;
+export async function getCDNFileStream(key: string): Promise<Readable | fs.ReadStream | null> {
+	try {
+		if (disabledFeatures.s3) {
+			return await getLocalCDNFile(key);
+		} else {
+			const response = await s3.send(new GetObjectCommand({
+				Key: key,
+				Bucket: config.s3.bucket
+			}));
 
-	return `${protocol}://${host}${opath}`;
+			if (!response.Body) {
+				return null;
+			}
+
+			return response.Body as Readable;
+		}
+	} catch (error) {
+		return null;
+	}
+}
+
+export async function getLocalCDNFile(key: string): Promise<fs.ReadStream | null> {
+	const filePath: string = `${config.cdn.disk_path}/${key}`;
+
+	if (await !fs.exists(filePath)) {
+		return null;
+	}
+
+	return fs.createReadStream(filePath);
 }
 
 export async function uploadCDNAsset(key: string, data: Buffer): Promise<void> {
@@ -163,4 +167,32 @@ export function makeRPGListFromQueryResults(rpgs: HydratedRPGDocument[]): RPGLis
 	}
 
 	return rpgList;
+}
+
+export function escapeRegExp(string: string): string {
+	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function nintendoBase64Decode(encoded: string): Buffer {
+	encoded = encoded.replaceAll('.', '+').replaceAll('-', '/').replaceAll('*', '=');
+	return Buffer.from(encoded, 'base64');
+}
+
+export function generateRPGPassword(): string {
+	const chars = '0123456789abcdefghiklmnopqrstuvwxyz';
+	let password = '';
+
+	for (let i = 0; i < 8; i++) {
+		password += chars[Math.floor(Math.random() * chars.length)];
+	}
+
+	return password;
+}
+
+export function fullUrl(request: express.Request): string {
+	const protocol: string = request.protocol;
+	const host: string = request.host;
+	const opath: string = request.originalUrl;
+
+	return `${protocol}://${host}${opath}`;
 }

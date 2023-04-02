@@ -21,11 +21,11 @@ export interface PostRequestArgs extends Genres {
 	award?: number;
 	famer?: number;
 
-	// * Only present when searching by title/password
+	// * Only present when searching for an RPG
 	keyword?: string;
 
 	// * Only present when downloading/reviewing/deleteing an RPG
-	sid?: string;
+	sid?: number;
 
 	// * Only present when downloading an RPG
 	ver?: string;

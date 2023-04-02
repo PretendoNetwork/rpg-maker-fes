@@ -21,6 +21,7 @@ import rpglistuname from '@/routes/rpglistuname';
 import rpglistsuid from '@/routes/rpglistsuid';
 import myrpglist from '@/routes/myrpglist';
 import rpgupload from '@/routes/rpgupload';
+import rpgdownload from '@/routes/rpgdownload';
 
 import { config } from '@/config-manager';
 
@@ -62,6 +63,7 @@ api.use('/api', rpglistuname);
 api.use('/api', rpglistsuid);
 api.use('/api', myrpglist);
 api.use('/api', rpgupload);
+api.use('/api', rpgdownload);
 
 // * Create router for subdomain
 const apiSubdomain = express.Router();
