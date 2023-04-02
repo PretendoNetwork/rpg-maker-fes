@@ -1,6 +1,7 @@
 import express from 'express';
 import subdomain from 'express-subdomain';
 import morgan from 'morgan';
+import multipartMiddleware from '@/middleware/multipart';
 import requestParamsMiddleware from '@/middleware/request-params';
 import tokenMiddleware from '@/middleware/token';
 import makerMiddleware from '@/middleware/maker';
@@ -15,6 +16,7 @@ import username from '@/routes/username';
 import contestlist from '@/routes/contestlist';
 import rpglist from '@/routes/rpglist';
 import myrpglist from '@/routes/myrpglist';
+import rpgupload from '@/routes/rpgupload';
 
 import { config } from '@/config-manager';
 
@@ -26,10 +28,15 @@ const app = express();
 // * Setup middleware
 LOG_INFO('Setting up Middleware');
 app.use(morgan('dev'));
+app.use(express.raw({
+	limit: '50mb',
+	type: 'multipart/form-data'
+}));
 app.use(express.json());
 app.use(express.urlencoded({
 	extended: true
 }));
+app.use(multipartMiddleware);
 app.use(requestParamsMiddleware);
 app.use(tokenMiddleware);
 app.use(makerMiddleware);
@@ -51,6 +58,7 @@ api.use('/api', username);
 api.use('/api', contestlist);
 api.use('/api', rpglist);
 api.use('/api', myrpglist);
+api.use('/api', rpgupload);
 
 // * Create router for subdomain
 const apiSubdomain = express.Router();

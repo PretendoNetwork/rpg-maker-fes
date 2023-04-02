@@ -5,6 +5,7 @@ import { HydratedMakerDocument } from '@/types/mongoose/maker';
 declare global {
 	namespace Express {
 		interface Request {
+			file: Buffer;
 			args: PostRequestArgs;
 			token: Token;
 			maker: HydratedMakerDocument | null;

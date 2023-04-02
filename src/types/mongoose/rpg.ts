@@ -1,20 +1,21 @@
 import { Model, HydratedDocument } from 'mongoose';
-import { GenreIDs } from '@/types/common/genres';
+import { GenreID } from '@/types/common/genres';
 
 export interface IRPG {
 	id: number;
 	password: string;
-	updated: number;
+	updated: string;
 	maker_id: number;
 	maker_username: string;
 	title: string;
 	comment: string;
 	rating: number;
-	genres: GenreIDs[];
+	genres: GenreID[];
 	version: number;
 	package_version: number;
 	editable: boolean;
 	language: string;
+	region: string;
 	attribute: number;
 	owner: number;
 	award: number;
@@ -28,7 +29,9 @@ export interface IRPG {
 	}[];
 }
 
-export interface IRPGMethods {}
+export interface IRPGMethods {
+	generatePassword(): Promise<void>;
+}
 
 interface IRPGQueryHelpers {}
 

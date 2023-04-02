@@ -1,4 +1,4 @@
-export type GenreIDs =
+export type GenreID =
 	1 |  // * Fantasy
 	2 |  // * SF
 	3 |  // * School Life
@@ -35,5 +35,5 @@ export type GenreIDs =
 	34;  // * Updated
 
 export type Genres = {
-	[K in `genre${GenreIDs}`]?: 1;
+	[K in `genre${GenreID}`]?: 1;
 }

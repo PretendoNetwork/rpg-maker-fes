@@ -1,13 +1,12 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
 import { IncomingHttpHeaders } from 'node:http';
+import { PutObjectCommand, S3 } from '@aws-sdk/client-s3';
 import fs from 'fs-extra';
 import express from 'express';
-import { config } from '@/config-manager';
+import { config, disabledFeatures } from '@/config-manager';
 import { Token } from '@/types/common/token';
 
-// * For later
-/*
 let s3: S3;
 
 if (!disabledFeatures.s3) {
@@ -21,7 +20,6 @@ if (!disabledFeatures.s3) {
 		}
 	});
 }
-*/
 
 export function nintendoBase64Decode(encoded: string): Buffer {
 	encoded = encoded.replaceAll('.', '+').replaceAll('-', '/').replaceAll('*', '=');
@@ -75,20 +73,18 @@ export function fullUrl(request: express.Request): string {
 	return `${protocol}://${host}${opath}`;
 }
 
-/*
-export async function uploadCDNAsset(bucket: string, key: string, data: Buffer, acl: string): Promise<void> {
+export async function uploadCDNAsset(key: string, data: Buffer): Promise<void> {
 	if (disabledFeatures.s3) {
 		await writeLocalCDNFile(key, data);
 	} else {
-		await s3.putObject({
-			Body: data,
+		await s3.send(new PutObjectCommand({
 			Key: key,
-			Bucket: bucket,
-			ACL: acl
-		}).promise();
+			Bucket: config.s3.bucket,
+			Body: data,
+			ACL: 'private'
+		}));
 	}
 }
-*/
 
 export async function writeLocalCDNFile(key: string, data: Buffer): Promise<void> {
 	const filePath: string = config.cdn.disk_path;
