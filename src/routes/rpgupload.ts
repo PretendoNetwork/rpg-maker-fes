@@ -35,9 +35,9 @@ router.post('/rpgupload', async (request: express.Request, response: express.Res
 		region: request.args.region,
 		attribute: request.args.attribute,
 		owner: request.args.owner,
-		award: request.args.award,
-		famer: request.args.famer,
-		contest: request.args.contest,
+		award: request.args.award !== undefined ? request.args.award : 0,
+		famer: request.args.famer !== undefined ? request.args.famer : 0,
+		contest: request.args.contest !== undefined ? Boolean(request.args.contest) : false,
 		downloads: 0,
 		block_size: request.args.datablocksize,
 		reviews: []
