@@ -3,6 +3,7 @@ import { jsonEncodeUTF16LE } from '@/util';
 import { getRPGListByUpdateDate, getRPGListByDownloads } from '@/database';
 import { RPGList } from '@/types/common/rpg-list';
 import { RPGSearchFilterParams } from '@/types/common/rpg-search-filter-params';
+import { GenreID } from '@/types/common/genres';
 
 const router: express.Router = express.Router();
 
@@ -23,6 +24,8 @@ router.post('/rpglist', async (request: express.Request, response: express.Respo
 	// TODO - Finish filter params
 	const filter: RPGSearchFilterParams = {};
 
+	const hasGenres: boolean = Object.keys(request.args).some(key => key.startsWith('genre'));
+
 	// TODO - Find a better error, this is a guess
 	let rpgList: RPGList = {
 		endcode: 100
@@ -33,6 +36,19 @@ router.post('/rpglist', async (request: express.Request, response: express.Respo
 	}
 
 	if (request.args.sortupdt !== undefined) {
+		if (hasGenres) {
+			filter.genres = {
+				$in: []
+			};
+
+			for (const key in request.args) {
+				if (key.startsWith('genre')) {
+					const genre: GenreID = <GenreID>Number(key.split('genre')[1]);
+					filter.genres.$in.push(genre);
+				}
+			}
+		}
+
 		rpgList = await getRPGListByUpdateDate(filter, request.args.sortupdt, request.args.offset, request.args.recnum);
 	}
 
