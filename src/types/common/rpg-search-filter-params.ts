@@ -16,5 +16,6 @@ export interface RPGSearchFilterParams {
 	famer?: number;
 	genres?: {
 		$in: GenreID[]
-	}
+	},
+	deleted?: boolean;
 }

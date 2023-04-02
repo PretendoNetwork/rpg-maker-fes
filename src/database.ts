@@ -34,6 +34,8 @@ export function verifyConnected(): void {
 async function getRPGList(filter: RPGSearchFilterParams, sort: RPGSearchSortParams, offset: number, limit: number): Promise<RPGList> {
 	verifyConnected();
 
+	filter.deleted = false;
+
 	try {
 		const queryResults: HydratedRPGDocument[] = await RPG.find(filter).sort(sort).skip(offset).limit(limit).exec();
 		return makeRPGListFromQueryResults(queryResults);

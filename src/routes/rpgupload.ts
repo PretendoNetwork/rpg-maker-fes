@@ -40,7 +40,8 @@ router.post('/rpgupload', async (request: express.Request, response: express.Res
 		contest: request.args.contest !== undefined ? Boolean(request.args.contest) : false,
 		downloads: 0,
 		block_size: request.args.datablocksize,
-		reviews: []
+		reviews: [],
+		deleted: false
 	});
 
 	for (const key in request.args) {

@@ -29,7 +29,8 @@ const RPGSchema = new mongoose.Schema<IRPG, RPGModel, IRPGMethods>({
 	reviews: Array<{
 		user_id: number,
 		rating: number
-	}>
+	}>,
+	deleted: Boolean
 }, { id: false });
 
 RPGSchema.plugin(AutoIncrementID, {

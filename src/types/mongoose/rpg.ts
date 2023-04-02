@@ -27,6 +27,7 @@ export interface IRPG {
 		user_id: number;
 		rating: number;
 	}[];
+	deleted: boolean;
 }
 
 export interface IRPGMethods {
