@@ -24,6 +24,10 @@ if (!disabledFeatures.s3) {
 	});
 }
 
+export function escapeRegExp(string: string): string {
+	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export function nintendoBase64Decode(encoded: string): Buffer {
 	encoded = encoded.replaceAll('.', '+').replaceAll('-', '/').replaceAll('*', '=');
 	return Buffer.from(encoded, 'base64');

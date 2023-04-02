@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { makeRPGListFromQueryResults } from '@/util';
+import { escapeRegExp, makeRPGListFromQueryResults } from '@/util';
 import { config } from '@/config-manager';
 import { Maker } from '@/models/maker';
 import { RPG } from '@/models/rpg';
@@ -70,6 +70,21 @@ export async function getRPGListByDownloads(order: mongoose.SortOrder, offset: n
 
 	try {
 		const queryResults: HydratedRPGDocument[] = await RPG.find().sort({ downloads: order }).skip(offset).limit(limit).exec();
+		return makeRPGListFromQueryResults(queryResults);
+	} catch (err) {
+		// TODO - Better error
+		return {
+			endcode: 100
+		};
+	}
+}
+
+export async function getRPGListByTitle(title: string, offset: number, limit: number): Promise<RPGList> {
+	verifyConnected();
+
+	try {
+		title = escapeRegExp(title);
+		const queryResults: HydratedRPGDocument[] = await RPG.find({ title: { $regex: `^${title}*`, $options: 'i' } }).skip(offset).limit(limit).exec();
 		return makeRPGListFromQueryResults(queryResults);
 	} catch (err) {
 		// TODO - Better error
