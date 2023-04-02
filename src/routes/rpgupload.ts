@@ -10,7 +10,7 @@ const router: express.Router = express.Router();
 /**
  * [POST]
  * Replacement for: https://rtk3dsf-lb01-1291588867.us-east-1.elb.amazonaws.com/api/rpgupload
- * Description: Signs in the user
+ * Description: Uploads an RPG
  */
 router.post('/rpgupload', async (request: express.Request, response: express.Response) => {
 	if (crc32(request.file) !== request.args.crc32) {

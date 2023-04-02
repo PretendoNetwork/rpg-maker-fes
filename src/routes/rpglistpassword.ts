@@ -8,7 +8,7 @@ const router: express.Router = express.Router();
 /**
  * [POST]
  * Replacement for: https://rtk3dsf-lb01-1291588867.us-east-1.elb.amazonaws.com/api/rpglistpassword
- * Description: Gets a list of available RPGs
+ * Description: Gets an RPG by the RPG password
  */
 router.post('/rpglistpassword', async (request: express.Request, response: express.Response) => {
 	if (request.args.keyword === undefined) {

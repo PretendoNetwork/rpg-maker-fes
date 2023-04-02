@@ -7,7 +7,7 @@ const router: express.Router = express.Router();
 /**
  * [POST]
  * Replacement for: https://rtk3dsf-lb01-1291588867.us-east-1.elb.amazonaws.com/api/username
- * Description: Signs in the user
+ * Description: Register the users nickname
  */
 router.post('/username', async (request: express.Request, response: express.Response) => {
 	// TODO - Check if username already in use?
