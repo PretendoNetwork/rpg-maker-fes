@@ -18,10 +18,10 @@ router.post('/rpglist', async (request: express.Request, response: express.Respo
 		}));
 	}
 
-	let body: RPGList;
+	let rpgList: RPGList;
 
 	if (request.args.sortdlcount !== undefined) {
-		body = await getRPGListByDownloads(request.args.sortdlcount, request.args.offset, request.args.recnum);
+		rpgList = await getRPGListByDownloads(request.args.sortdlcount, request.args.offset, request.args.recnum);
 	} else {
 		// TODO - Better error, this is a guess
 		return response.send(jsonEncodeUTF16LE({
@@ -29,7 +29,7 @@ router.post('/rpglist', async (request: express.Request, response: express.Respo
 		}));
 	}
 
-	response.send(jsonEncodeUTF16LE(body));
+	response.send(jsonEncodeUTF16LE(rpgList));
 });
 
 export default router;

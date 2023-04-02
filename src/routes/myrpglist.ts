@@ -1,5 +1,7 @@
 import express from 'express';
 import { jsonEncodeUTF16LE } from '@/util';
+import { getRPGListByUsername } from '@/database';
+import { RPGList } from '@/types/common/rpg-list';
 
 const router: express.Router = express.Router();
 
@@ -9,9 +11,9 @@ const router: express.Router = express.Router();
  * Description: Gets a list of active contests
  */
 router.post('/myrpglist', async (request: express.Request, response: express.Response) => {
-	response.send(jsonEncodeUTF16LE({
-		endcode: 0
-	}));
+	const rpgList: RPGList = await getRPGListByUsername(request.maker?.username || '', 0, 0);
+
+	response.send(jsonEncodeUTF16LE(rpgList));
 });
 
 export default router;
