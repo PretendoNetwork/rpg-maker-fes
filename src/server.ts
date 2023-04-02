@@ -23,6 +23,7 @@ import myrpglist from '@/routes/myrpglist';
 import rpgupload from '@/routes/rpgupload';
 import rpgdelete from '@/routes/rpgdelete';
 import rpgdownload from '@/routes/rpgdownload';
+import rpgreview from '@/routes/rpgreview';
 
 import { config } from '@/config-manager';
 
@@ -66,6 +67,7 @@ api.use('/api', myrpglist);
 api.use('/api', rpgupload);
 api.use('/api', rpgdelete);
 api.use('/api', rpgdownload);
+api.use('/api', rpgreview);
 
 // * Create router for subdomain
 const apiSubdomain = express.Router();

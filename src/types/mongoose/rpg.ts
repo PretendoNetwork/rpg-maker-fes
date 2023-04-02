@@ -9,7 +9,6 @@ export interface IRPG {
 	maker_username: string;
 	title: string;
 	comment: string;
-	rating: number;
 	genres: GenreID[];
 	version: number;
 	package_version: number;
@@ -24,7 +23,7 @@ export interface IRPG {
 	downloads: number;
 	block_size: number;
 	reviews: {
-		user_id: number;
+		maker_id: number;
 		rating: number;
 	}[];
 	deleted: boolean;

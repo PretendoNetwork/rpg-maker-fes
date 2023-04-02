@@ -90,3 +90,27 @@ export async function getRPGListByDownloads(filter: RPGSearchFilterParams, order
 export async function getRPGListByRating(filter: RPGSearchFilterParams, order: mongoose.SortOrder, offset: number, limit: number): Promise<RPGList> {
 	return await getRPGList(filter, { rating: order }, offset, limit);
 }
+
+export async function reviewedRPG(makerID: number, id: number): Promise<boolean> {
+	const rpg: HydratedRPGDocument | null = await RPG.findOne({
+		id: id,
+		reviews: {
+			$elemMatch: {
+				maker_id: makerID
+			}
+		}
+	});
+
+	return !!rpg;
+}
+
+export async function addRPGReview(id: number, makerID: number, rating: number): Promise<void> {
+	await RPG.updateOne({ id }, {
+		$push: {
+			reviews: {
+				maker_id: makerID,
+				rating: rating
+			}
+		}
+	});
+}

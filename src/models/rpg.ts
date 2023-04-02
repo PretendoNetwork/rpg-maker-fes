@@ -12,7 +12,6 @@ const RPGSchema = new mongoose.Schema<IRPG, RPGModel, IRPGMethods>({
 	maker_username: String,
 	title: String,
 	comment: String,
-	rating: Number,
 	genres: Array<GenreID>,
 	version: Number,
 	package_version: Number,
@@ -27,7 +26,7 @@ const RPGSchema = new mongoose.Schema<IRPG, RPGModel, IRPGMethods>({
 	downloads: Number,
 	block_size: Number,
 	reviews: Array<{
-		user_id: number,
+		maker_id: number,
 		rating: number
 	}>,
 	deleted: Boolean

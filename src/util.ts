@@ -148,7 +148,7 @@ export function makeRPGListFromQueryResults(rpgs: HydratedRPGDocument[]): RPGLis
 			datablocksize: rpg.block_size,
 			version:  rpg.version,
 			packageversion: rpg.package_version,
-			reviewave: rpg.rating,
+			reviewave: 0,
 			lang: rpg.language,
 			edit: rpg.editable ? 1 : 0,
 			attribute: rpg.attribute,
@@ -158,6 +158,13 @@ export function makeRPGListFromQueryResults(rpgs: HydratedRPGDocument[]): RPGLis
 			contest: rpg.contest ? 1 : 0,
 			owner: rpg.owner
 		};
+
+		for (const review of rpg.reviews) {
+			rpgData.reviewave += review.rating;
+		}
+
+		rpgData.reviewave = rpgData.reviewave / rpg.reviews.length;
+		rpgData.reviewave = Number(rpgData.reviewave.toFixed(5));
 
 		for (const genre of rpg.genres) {
 			rpgData[`genre${genre}`] = 1;
