@@ -1,9 +1,10 @@
 import express from 'express';
 import moment from 'moment';
+import { buf as crc32 } from 'crc-32';
 import { jsonEncodeUTF16LE, uploadCDNAsset } from '@/util';
 import { RPG } from '@/models/rpg';
 import { GenreID } from '@/types/common/genres';
-import { buf as crc32 } from 'crc-32';
+import { HydratedRPGDocument } from '@/types/mongoose/rpg';
 
 const router: express.Router = express.Router();
 
@@ -20,7 +21,7 @@ router.post('/rpgupload', async (request: express.Request, response: express.Res
 		}));
 	}
 
-	const rpg = await RPG.create({
+	const rpg: HydratedRPGDocument = await RPG.create({
 		updated: moment().format('YYYY-MM-DD HH-mm-ss'),
 		maker_id: request.maker?.id,
 		maker_username: request.maker?.username,
