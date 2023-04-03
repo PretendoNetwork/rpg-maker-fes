@@ -3,8 +3,10 @@ import { escapeRegExp, makeRPGListFromQueryResults } from '@/util';
 import { config } from '@/config-manager';
 import { Maker } from '@/models/maker';
 import { RPG } from '@/models/rpg';
+import { Report } from '@/models/report';
 import { HydratedMakerDocument } from '@/types/mongoose/maker';
 import { HydratedRPGDocument } from '@/types/mongoose/rpg';
+import { HydratedReportDocument } from '@/types/mongoose/report';
 import { RPGList } from '@/types/common/rpg-list';
 import { RPGSearchFilterParams } from '@/types/common/rpg-search-filter-params';
 import { RPGSearchSortParams } from './types/common/rpg-search-sort-params';
@@ -113,4 +115,13 @@ export async function addRPGReview(id: number, makerID: number, rating: number):
 			}
 		}
 	});
+}
+
+export async function reportedRPG(makerID: number, rpgID: number): Promise<boolean> {
+	const report: HydratedReportDocument | null = await Report.findOne({
+		rpg_id: rpgID,
+		maker_id: makerID
+	});
+
+	return !!report;
 }
