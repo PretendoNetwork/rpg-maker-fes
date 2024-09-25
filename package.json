@@ -23,6 +23,7 @@
   "homepage": "https://github.com/PretendoNetwork/rpg-maker-fes#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.303.0",
+    "@typegoose/auto-increment": "^3.0.0",
     "colors": "^1.4.0",
     "crc-32": "^1.2.2",
     "dotenv": "^16.0.3",
@@ -35,7 +36,6 @@
     "parse-multipart-data": "^1.5.0"
   },
   "devDependencies": {
-    "@typegoose/auto-increment": "^3.0.0",
     "@types/express": "^4.17.17",
     "@types/fs-extra": "^11.0.1",
     "@types/morgan": "^1.9.4",
